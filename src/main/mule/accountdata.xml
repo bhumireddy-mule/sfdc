@@ -35,6 +35,7 @@ payload map (item,index) -> {
 }]]></ee:set-payload>
 			</ee:message>
 		</ee:transform>
+		<logger level="INFO" doc:name="Logger" doc:id="a4044b3c-9f2e-4bfc-9e08-682ebee40f76" message="this is secound log"/>
 		<salesforce:create type="Account" doc:name="Create" doc:id="28c2b7aa-8d01-430a-8df4-d023dfbac1b8" config-ref="Salesforce_Config" />
 		<file:write doc:name="Write" doc:id="008ba449-0a5e-47c3-8627-ab9a125d7304" config-ref="File_Config2" path="C:\Users\sh\AnypointStudio\studio-workspace\accountdata\src\main\resources\out.json"/>
 		<logger level="INFO" doc:name="Logger" doc:id="c9e18c6e-5767-42e1-a7ac-cb148b73500f" message="second  logger"/>
