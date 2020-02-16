@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:salesforce="http://www.mulesoft.org/schema/mule/salesforce" xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core"
+	xmlns:file="http://www.mulesoft.org/schema/mule/file"
+	xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/file http://www.mulesoft.org/schema/mule/file/current/mule-file.xsd
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd
+http://www.mulesoft.org/schema/mule/salesforce http://www.mulesoft.org/schema/mule/salesforce/current/mule-salesforce.xsd">
+	<file:config name="File_Config" doc:name="File Config" doc:id="5791c9f5-1e34-4152-b868-4709099e4713" >
+		<file:connection workingDir="C:\Users\sh\AnypointStudio\studio-workspace\accountdata" />
+	</file:config>
+	<file:config name="File_Config1" doc:name="File Config" doc:id="897b8288-43a1-4951-a4e4-34f0472697ab" >
+		<file:connection workingDir="C:\Users\sh\AnypointStudio\studio-workspace\accountdata" />
+	</file:config>
+	<file:config name="File_Config2" doc:name="File Config" doc:id="c30c1fe6-149f-450a-8ae6-b1ede949ad10" >
+		<file:connection workingDir="C:\Users\sh\AnypointStudio\studio-workspace\accountdata" />
+	</file:config>
+	<salesforce:sfdc-config name="Salesforce_Config" doc:name="Salesforce Config" doc:id="80d1b58a-ac88-416e-9b9b-c25d28423210" >
+		<salesforce:cached-basic-connection username="bhumi@bullreddy.com" password="rajareddy@6" securityToken="G4JVmKGz91GUWU2Yg6Ohyt4cR" />
+	</salesforce:sfdc-config>
+	<flow name="accountdataFlow" doc:id="a2bfd14b-1f20-4e85-baab-6869135b15aa" >
+		<file:listener doc:name="On New or Updated File" doc:id="5dae7262-14f8-4c08-8435-dbfe14ec5136" config-ref="File_Config1" directory="C:\Users\sh\AnypointStudio\studio-workspace\accountdata\src\main\resources\input" moveToDirectory="C:\Users\sh\AnypointStudio\studio-workspace\accountdata\src\main\resources\out">
+			<scheduling-strategy >
+				<fixed-frequency frequency="5" timeUnit="SECONDS" />
+			</scheduling-strategy>
+		</file:listener>
+		<logger level="INFO" doc:name="Logger" doc:id="9394d5f9-b2aa-4885-9328-821572e9881a" message="first account"/>
+		<ee:transform doc:name="Transform Message" doc:id="301710a7-f5de-4f64-9d76-c651abaeab21" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/java
+---
+payload map (item,index) -> {
+	name: item.NAME
+}]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+		<salesforce:create type="Account" doc:name="Create" doc:id="28c2b7aa-8d01-430a-8df4-d023dfbac1b8" config-ref="Salesforce_Config" />
+		<file:write doc:name="Write" doc:id="008ba449-0a5e-47c3-8627-ab9a125d7304" config-ref="File_Config2" path="C:\Users\sh\AnypointStudio\studio-workspace\accountdata\src\main\resources\out.json"/>
+		<logger level="INFO" doc:name="Logger" doc:id="c9e18c6e-5767-42e1-a7ac-cb148b73500f" message="second  logger"/>
+	</flow>
+</mule>
